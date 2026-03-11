@@ -10,6 +10,10 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - name: Generate Cargo.lock for engine-rust
+        run: |
+          cd engine-rust
+          cargo generate-lockfile
       - name: Run Rust tests
         run: |
           rustup target add aarch64-apple-ios x86_64-apple-ios || true
