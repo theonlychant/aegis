@@ -6,7 +6,7 @@ rustflags = [
 
 [profile.release]
 opt-level = "z"
-lto = true
+lto = false
 codegen-units = 1
 debug = false
-panic = "abort"
+# Keep default panic strategy to allow tests to run (don't force abort)

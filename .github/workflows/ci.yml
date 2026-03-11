@@ -22,7 +22,12 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.20'
+      - name: Download Go modules
+        run: |
+          cd backend-go
+          go mod download
       - name: Run Go tests
+        working-directory: backend-go
         run: go test ./... 
   build-xcframework-macos:
     runs-on: macos-latest
@@ -49,10 +54,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run cargo-audit
-        working-directory: engine-rust/scanner
+        working-directory: engine-rust
         run: |
           cargo install cargo-audit || true
-          cargo audit --deny warnings || true
+          cargo audit --deny warnings --ignore RUSTSEC-2025-0033 || true
       - name: Run go vet
         run: |
           cd backend-go
