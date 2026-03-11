@@ -14,7 +14,7 @@ int aegis_verify_and_scan(const unsigned char *pubkey, unsigned long pubkey_len,
 // Bridge functions implemented in engine-c that forward to Rust FFI when available
 int aegis_scan_buffer_bridge(const unsigned char *buf, unsigned long len);
 int aegis_verify_rulepack_bridge(const unsigned char *pubkey, unsigned long pubkey_len, const unsigned char *data, unsigned long data_len, const unsigned char *sig, unsigned long sig_len);
-int aegis_scan_with_rulepack(const unsigned char *buf, unsigned long len, const char *rules_json);
+int aegis_scan_with_rulepack_bridge(const unsigned char *buf, unsigned long len, const char *rules_json);
 int aegis_verify_and_scan_bridge(const unsigned char *pubkey, unsigned long pubkey_len, const char *rulepack_json, unsigned long rulepack_len, const unsigned char *sig, unsigned long sig_len, const unsigned char *buf, unsigned long buf_len);
 
 // Error reporting API

@@ -5,6 +5,7 @@
 
 // Forward declarations for Rust-provided symbols (linked at build time)
 extern int aegis_scan_buffer(const unsigned char *buf, unsigned long len);
+extern int aegis_scan_with_rulepack(const unsigned char *buf, unsigned long len, const char *rules_json);
 extern int aegis_verify_rulepack(const unsigned char *pubkey, unsigned long pubkey_len, const unsigned char *data, unsigned long data_len, const unsigned char *sig, unsigned long sig_len);
 extern int aegis_verify_and_scan(const unsigned char *pubkey, unsigned long pubkey_len, const char *rulepack_json, unsigned long rulepack_len, const unsigned char *sig, unsigned long sig_len, const unsigned char *buf, unsigned long buf_len);
 
@@ -36,7 +37,7 @@ int aegis_verify_rulepack_bridge(const unsigned char *pubkey, unsigned long pubk
     return ok;
 }
 
-int aegis_scan_with_rulepack(const unsigned char *buf, unsigned long len, const char *rules_json) {
+int aegis_scan_with_rulepack_bridge(const unsigned char *buf, unsigned long len, const char *rules_json) {
     return aegis_scan_with_rulepack(buf, len, rules_json);
 }
 
