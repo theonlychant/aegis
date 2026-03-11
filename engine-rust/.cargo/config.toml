@@ -1,13 +1,7 @@
 [build]
 rustflags = [
-  "-C",
-  "lto=thin",
-  "-C",
-  "codegen-units=1",
-  "-C",
-  "opt-level=z",
-  "-C",
-  "panic=abort",
+  "-Ccodegen-units=1",
+  "-Copt-level=z",
 ]
 
 [profile.release]
