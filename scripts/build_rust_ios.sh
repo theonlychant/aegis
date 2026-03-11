@@ -18,7 +18,8 @@ done
 # Build for each target
 for t in "${TARGETS[@]}"; do
   echo "Building for $t"
-  cargo build --manifest-path engine-rust/Cargo.toml --release --target "$t"
+  # Build the FFI crate directly so artifacts land under engine-rust/ffi/target
+  cargo build --manifest-path engine-rust/ffi/Cargo.toml --release --target "$t"
   LIB_PATH="engine-rust/ffi/target/$t/release"
   # Copy produced library artifacts (.a or .dylib) into release dir
   if [ -f "$LIB_PATH/libffi.a" ]; then
