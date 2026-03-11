@@ -1,0 +1,64 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build-rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Run Rust tests
+        run: |
+          rustup target add aarch64-apple-ios x86_64-apple-ios || true
+          cargo test --manifest-path engine-rust/Cargo.toml --workspace --locked
+  build-go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+      - name: Run Go tests
+        run: go test ./... 
+  build-xcframework-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/setup-rust@v1
+      - name: Make scripts executable
+        run: |
+          chmod +x scripts/build_rust_ios.sh || true
+          chmod +x scripts/create_xcframework.sh || true
+      - name: Build XCFramework
+        run: |
+          ./scripts/build_rust_ios.sh
+          ./scripts/create_xcframework.sh
+  build-swift:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Swift Package
+        run: swift build --package-path ios-app
+  security-scans:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run cargo-audit
+        run: |
+          cargo install cargo-audit || true
+          cargo audit --manifest-path engine-rust/scanner/Cargo.toml --deny warnings || true
+      - name: Run go vet
+        run: |
+          cd backend-go && go vet ./...
+      - name: Run semgrep
+        run: |
+          pip install semgrep
+          semgrep --config auto . || true
+      - name: Run cargo-fuzz (placeholder)
+        run: |
+          echo "cargo-fuzz requires libFuzzer and runner setup; configure manually or run locally"

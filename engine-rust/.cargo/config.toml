@@ -1,0 +1,18 @@
+[build]
+rustflags = [
+  "-C",
+  "lto=thin",
+  "-C",
+  "codegen-units=1",
+  "-C",
+  "opt-level=z",
+  "-C",
+  "panic=abort",
+]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+debug = false
+panic = "abort"

@@ -1,0 +1,9 @@
+{
+  "id": "example-malicious-domain",
+  "type": "domain_block",
+  "pattern": "malicious.example",
+  "description": "Block demo malicious.example domain",
+  "meta": {
+    "confidence": 90
+  }
+}

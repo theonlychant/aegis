@@ -1,0 +1,36 @@
+name: Hardened Build and Integration
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  host-integration:
+    name: Host integration (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake clang
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain-action@stable
+      - name: Build and run host integration
+        run: |
+          bash scripts/build_integration_host.sh
+
+  macos-xcframework:
+    name: Build XCFramework (macOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain-action@stable
+      - name: Build XCFramework
+        run: |
+          chmod +x scripts/build_release_xcframework.sh
+          bash scripts/build_release_xcframework.sh
+    

@@ -1,0 +1,26 @@
+# OS and editor
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*.swo
+*.swn
+*.log
+
+# Build / artifacts
+target/
+build/
+node_modules/
+venv/
+*.pyc
+
+# Xcode
+*.xcworkspace
+xcuserdata/
+*.xcuserstate
+DerivedData/
+
+# Local secrets
+*.pem
+*.key
+.env
