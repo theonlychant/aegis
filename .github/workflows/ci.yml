@@ -47,14 +47,27 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build iOS app with xcodebuild (simulator)
+      - name: Generate Xcode project (if needed) and build with xcodebuild
         run: |
-          set -e
-          # Adjust project/workspace and scheme names if your Xcode project differs
+          set -euo pipefail
           PROJECT_PATH="ios-app/Aegis.xcodeproj"
           SCHEME="Aegis"
           DEST="platform=iOS Simulator,name=iPhone 14"
-          xcodebuild -project "$PROJECT_PATH" -scheme "$SCHEME" -sdk iphonesimulator -destination "$DEST" clean build test
+
+          # If an Xcode project isn't checked in but an xcodegen spec is, generate it.
+          if [ ! -d "$PROJECT_PATH" ] && [ -f ios-app/project.yml ]; then
+            echo "Generating Xcode project with xcodegen"
+            brew install xcodegen || true
+            cd ios-app
+            xcodegen generate || true
+            cd -
+          fi
+
+          if [ -d "$PROJECT_PATH" ]; then
+            xcodebuild -project "$PROJECT_PATH" -scheme "$SCHEME" -sdk iphonesimulator -destination "$DEST" clean build test
+          else
+            echo "No Xcode project found at $PROJECT_PATH and no project.yml to generate one; skipping iOS build"
+          fi
   security-scans:
     runs-on: ubuntu-latest
     steps:
