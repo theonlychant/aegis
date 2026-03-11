@@ -77,8 +77,21 @@ func attestVerifyHandler(w http.ResponseWriter, r *http.Request) {
 
 // Serve a signed rule pack. Loads or generates an ECDSA P-256 key and signs the rule pack.
 func rulesHandler(w http.ResponseWriter, r *http.Request) {
-	// Load rule data from rules/example-rule.json (for demonstration)
-	data, err := ioutil.ReadFile("rules/example-rule.json")
+	// Load rule data from a rules file. Allow override with RULE_FILE_PATH env var,
+	// otherwise try common locations relative to this service (including parent).
+	var data []byte
+	var err error
+	if rp := os.Getenv("RULE_FILE_PATH"); rp != "" {
+		data, err = ioutil.ReadFile(rp)
+	} else {
+		candidates := []string{"rules/example-rule.json", "../rules/example-rule.json", "./rules/example-rule.json"}
+		for _, p := range candidates {
+			data, err = ioutil.ReadFile(p)
+			if err == nil {
+				break
+			}
+		}
+	}
 	if err != nil {
 		http.Error(w, "failed to read rule pack", http.StatusInternalServerError)
 		return
