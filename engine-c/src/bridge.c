@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "../include/aegis_ffi.h"
 
 // Forward declarations for Rust-provided symbols (linked at build time)
 extern int aegis_scan_buffer(const unsigned char *buf, unsigned long len);
