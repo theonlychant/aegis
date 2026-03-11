@@ -11,3 +11,6 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 scanner = { path = "../scanner" }
 libc = "0.2"
+
+[build-dependencies]
+cc = "1.0"
