@@ -49,12 +49,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run cargo-audit
+        working-directory: engine-rust/scanner
         run: |
           cargo install cargo-audit || true
-          cargo audit --manifest-path engine-rust/scanner/Cargo.toml --deny warnings || true
+          cargo audit --deny warnings || true
       - name: Run go vet
         run: |
-          cd backend-go && go vet ./...
+          cd backend-go
+          go mod download
+          go vet ./...
       - name: Run semgrep
         run: |
           pip install semgrep

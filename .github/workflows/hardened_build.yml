@@ -12,15 +12,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Cache Rust/Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            engine-rust/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
       - name: Install build deps
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake clang
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain-action@stable
+      - name: Run Rust unit and integration tests
+        working-directory: engine-rust
+        run: |
+          cargo test --workspace --tests --verbose
       - name: Build and run host integration
         run: |
           bash scripts/build_integration_host.sh
+      - name: Upload integration logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: host-integration-logs
+          path: engine-rust/target/debug
 
   macos-xcframework:
     name: Build XCFramework (macOS)
@@ -29,8 +49,26 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain-action@stable
+      - name: Cache Rust/Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            engine-rust/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Run Rust tests (macOS)
+        working-directory: engine-rust
+        run: |
+          cargo test -p ffi --verbose || true
       - name: Build XCFramework
         run: |
           chmod +x scripts/build_release_xcframework.sh
           bash scripts/build_release_xcframework.sh
+      - name: Upload XCFramework artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcframework
+          path: build/xcframework || a.out
     
