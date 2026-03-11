@@ -123,12 +123,12 @@ func rulesHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Sign the payload: concatenate version + \n + rule bytes
 	payload := append([]byte(version+"\n"), data...)
-	sigR, sigS, err := ecdsa.Sign(rand.Reader, priv, sha256Sum(payload))
+	sigR, sigS, err = ecdsa.Sign(rand.Reader, priv, sha256Sum(payload))
 	if err != nil {
 		http.Error(w, "sign failed", http.StatusInternalServerError)
 		return
 	}
-	sigBytes, err := asn1Marshal(sigR, sigS)
+	sigBytes, err = asn1Marshal(sigR, sigS)
 	if err != nil {
 		http.Error(w, "sig marshal failed", http.StatusInternalServerError)
 		return
