@@ -47,8 +47,14 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build Swift Package
-        run: swift build --package-path ios-app
+      - name: Build iOS app with xcodebuild (simulator)
+        run: |
+          set -e
+          # Adjust project/workspace and scheme names if your Xcode project differs
+          PROJECT_PATH="ios-app/Aegis.xcodeproj"
+          SCHEME="Aegis"
+          DEST="platform=iOS Simulator,name=iPhone 14"
+          xcodebuild -project "$PROJECT_PATH" -scheme "$SCHEME" -sdk iphonesimulator -destination "$DEST" clean build test
   security-scans:
     runs-on: ubuntu-latest
     steps:
