@@ -30,6 +30,9 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - name: Add iOS Rust targets
+        run: |
+          rustup target add aarch64-apple-ios x86_64-apple-ios || true
       - name: Run Rust unit and integration tests
         working-directory: engine-rust
         run: |
@@ -53,6 +56,9 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - name: Add iOS Rust targets
+        run: |
+          rustup target add aarch64-apple-ios x86_64-apple-ios || true
       - name: Cache Rust/Cargo
         uses: actions/cache@v4
         with:
