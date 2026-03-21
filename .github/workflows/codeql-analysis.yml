@@ -87,6 +87,18 @@ jobs:
         # return to repo root
         cd $GITHUB_WORKSPACE
 
+    - name: Expose website sources at repo root for CodeQL
+      if: contains(matrix.language, 'javascript')
+      run: |
+        echo "Copying website/ contents to repo root to ensure CodeQL sees JS/TS sources"
+        set -e
+        if [ -d ./website ]; then
+          cp -a website/. "$GITHUB_WORKSPACE/" || true
+          echo "Copied website/ to repo root"
+        else
+          echo "No website/ directory present; skipping"
+        fi
+
     - name: Trace JavaScript build for CodeQL
       if: contains(matrix.language, 'javascript')
       run: |
