@@ -120,14 +120,13 @@ Resources / Reading List
 
 The repository includes a set of local reference PDFs useful for security, cryptography, and mobile platform guidance. Downloaded copies are available in `docs/resources/` for offline reading.
 
-- **OWASP Mobile Security Testing Guide (MSTG)** — practical mobile testing techniques and checklist: [docs/resources/owasp-mstg-latest.pdf](docs/resources/owasp-mstg-latest.pdf)
-- **OWASP Mobile Application Security Verification Standard (MASVS)** — security requirements and verification criteria: [docs/resources/owasp-masvs-latest.pdf](docs/resources/owasp-masvs-latest.pdf)
-- **Argon2 specification** — Argon2 algorithm and parameter guidance for key derivation: [docs/resources/argon2-specs.pdf](docs/resources/argon2-specs.pdf)
-- **NIST SP 800-38D** — Galois/Counter Mode (GCM) for authenticated encryption: [docs/resources/nist-sp-800-38d.pdf](docs/resources/nist-sp-800-38d.pdf)
-- **NIST SP 800-63-3** — Digital Identity Guidelines (authentication and identity proofing): [docs/resources/nist-sp-800-63-3.pdf](docs/resources/nist-sp-800-63-3.pdf)
-- **RFC 5116** — AEAD interface and guidance: [docs/resources/rfc5116.pdf](docs/resources/rfc5116.pdf)
-- **Apple Platform Security (local copy)** — Apple platform and security guidance (verify redistribution rights): [docs/resources/apple-platform-security.pdf](docs/resources/apple-platform-security.pdf)
-- **Additional cryptography reference (provided)** — local uploaded copy: [docs/resources/Welschenbach-Cryptography-in-C-and-Cpp.pdf](docs/resources/Welschenbach-Cryptography-in-C-and-Cpp.pdf)
+Updated local resources (actual files present)
+- **Apple Platform Security (local copy)** — [docs/resources/apple-platform-security-guide.pdf](docs/resources/apple-platform-security-guide.pdf)
+- **Argon2 specification** — [docs/resources/argon2-specs.pdf](docs/resources/argon2-specs.pdf)
+- **NIST SP 800-38D (GCM)** — [docs/resources/nist-sp-800-38d.pdf](docs/resources/nist-sp-800-38d.pdf)
+- **NIST SP 800-63-3 (Digital Identity)** — [docs/resources/nist-sp-800-63-3.pdf](docs/resources/nist-sp-800-63-3.pdf)
+- **Secure Coding / C/C++ (provided)** — [docs/resources/secure coding in c and c++.pdf](docs/resources/secure coding in c and c++.pdf)
+- **Cryptography in C and C++ (Welschenbach)** — [docs/resources/Welschenbach M. Cryptography in C and C++ (2ed., Apress, 2005)(ISBN 1590595025)(O)(504s)_CsCr_.pdf](docs/resources/Welschenbach M. Cryptography in C and C++ (2ed., Apress, 2005)(ISBN 1590595025)(O)(504s)_CsCr_.pdf)
 
 If you prefer, I can instead generate a separate `docs/reading-list.md` with these entries and short summaries. Replace any locally stored PDF with your own licensed copies as needed.
 
