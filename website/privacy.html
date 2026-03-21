@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Privacy — Project Aegis</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;gap:12px;align-items:center">
+        <img src="assets/logo.svg" alt="Aegis" style="height:34px" />
+        <strong>Project Aegis</strong>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        &nbsp;·&nbsp;
+        <a href="features.html">Features</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="reveal" data-delay="1">Privacy</h1>
+    <section class="card reveal" data-delay="2">
+      <p>Project Aegis is a prototype. By design, it minimizes data export. The default tools provided here do not exfiltrate user data.</p>
+    </section>
+
+    <section class="card reveal" data-delay="3">
+      <h3>Local-first</h3>
+      <p>Scanning and analysis run locally in native code. Any upload of telemetry or artifacts should be opt-in and audited.</p>
+    </section>
+
+    <section class="card reveal" data-delay="4">
+      <h3>Open audit</h3>
+      <p>Engine code is intended for audit. We recommend code review of the FFI boundary and packaging scripts before production use.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    For audits and contributions, see the repository README.
+  </footer>
+
+<script src="./scripts/site.js"></script>
+<script src="./scripts/site.advanced.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "aegis-website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "esbuild scripts/site.advanced.ts --bundle --sourcemap --outfile=./scripts/site.advanced.js --platform=browser --target=es2017",
+    "watch": "esbuild scripts/site.advanced.ts --bundle --sourcemap --outfile=./scripts/site.advanced.js --platform=browser --target=es2017 --watch"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.0",
+    "typescript": "^5.0.0"
+  }
+}
