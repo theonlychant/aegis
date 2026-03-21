@@ -154,6 +154,16 @@ jobs:
         echo "-- head of repo-root package.json (if present) --"
         if [ -f "$GITHUB_WORKSPACE/package.json" ]; then sed -n '1,200p' "$GITHUB_WORKSPACE/package.json" || true; else echo "no package.json at root"; fi
 
+    - name: Upload CodeQL trace artifacts
+      if: contains(matrix.language, 'javascript')
+      uses: actions/upload-artifact@v4
+      with:
+        name: codeql-javascript-trace-${{ github.run_id }}
+        path: |
+          /home/runner/work/_temp/codeql_databases/javascript
+          /home/runner/work/_temp/trapCaches/javascript
+          ${{ github.workspace }}/package.json
+
     - name: Build Rust FFI crate
       if: contains(matrix.language, 'cpp')
       run: |
