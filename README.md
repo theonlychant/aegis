@@ -123,8 +123,9 @@ Updated local resources (actual files present)
 - **Argon2 specification** - [docs/resources/argon2-specs.pdf](docs/resources/argon2-specs.pdf)
 - **NIST SP 800-38D (GCM)** - [docs/resources/nist-sp-800-38d.pdf](docs/resources/nist-sp-800-38d.pdf)
 - **NIST SP 800-63-3 (Digital Identity)** - [docs/resources/nist-sp-800-63-3.pdf](docs/resources/nist-sp-800-63-3.pdf)
- - **Secure Coding / C/C++ (provided)** — [docs/resources/secure%20coding%20in%20c%20and%20c%2B%2B.pdf](docs/resources/secure%20coding%20in%20c%20and%20c%2B%2B.pdf)
- - **Cryptography in C and C++ (Welschenbach)** — [docs/resources/Welschenbach%20M.%20Cryptography%20in%20C%20and%20C%2B%2B%20%282ed.%2C%20Apress%2C%202005%29%28ISBN%201590595025%29%28O%29%28504s%29_CsCr_.pdf](docs/resources/Welschenbach%20M.%20Cryptography%20in%20C%20and%20C%2B%2B%20%282ed.%2C%20Apress%2C%202005%29%28ISBN%201590595025%29%28O%29%28504s%29_CsCr_.pdf)
+ - **Secure Coding / C/C++ (provided)** - [docs/resources/secure%20coding%20in%20c%20and%20c%2B%2B.pdf](docs/resources/secure%20coding%20in%20c%20and%20c%2B%2B.pdf)
+ - **Cryptography in C and C++ (Welschenbach)** -[docs/resources/Welschenbach%20M.%20Cryptography%20in%20C%20and%20C%2B%2B%20%282ed.%2C%20Apress%2C%202005%29%28ISBN%201590595025%29%28O%29%28504s%29_CsCr_.pdf](docs/resources/Welschenbach%20M.%20Cryptography%20in%20C%20and%20C%2B%2B%20%282ed.%2C%20Apress%2C%202005%29%28ISBN%201590595025%29%28O%29%28504s%29_CsCr_.pdf)
+
 Contact
 -------
 email: sacehenry@gmail.com
