@@ -4,11 +4,14 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 # Build Rust ffi for host (linux x86_64 assumed)
 TARGET="x86_64-unknown-linux-gnu"
 cargo build --manifest-path "$ROOT_DIR/engine-rust/ffi/Cargo.toml" --release --target "$TARGET"
-LIB_PATH="$ROOT_DIR/engine-rust/ffi/target/$TARGET/release/libaegis_ffi.a"
-if [[ ! -f "$LIB_PATH" ]]; then
-  echo "Rust static lib not found at $LIB_PATH"
+LIB_DIR="$ROOT_DIR/engine-rust/ffi/target/$TARGET/release"
+# Find any produced static library (handles different crate/lib names)
+LIB_PATH="$(ls "$LIB_DIR"/lib*.a 2>/dev/null | head -n1 || true)"
+if [[ -z "$LIB_PATH" || ! -f "$LIB_PATH" ]]; then
+  echo "Rust static lib not found in $LIB_DIR"
   exit 1
 fi
+echo "Using Rust static lib: $LIB_PATH"
 
 # Build engine-cpp with CMake linking the rust static lib
 BUILD_DIR="$ROOT_DIR/build/engine-cpp-host"
