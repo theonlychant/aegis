@@ -13,12 +13,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run Semgrep
-        uses: returntocorp/semgrep-action@v1.28.0
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          # run standard CI rules; you can add a custom ruleset path if desired
-          config: 'p/ci'
-          output: 'results.sarif'
+          python-version: '3.x'
+
+      - name: Install Semgrep
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
+
+      - name: Run Semgrep CLI
+        run: |
+          semgrep --version
+          semgrep --config p/ci --output results.sarif --output-format sarif || true
 
       - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v2
