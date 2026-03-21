@@ -42,7 +42,7 @@ jobs:
           bash scripts/build_integration_host.sh
       - name: Upload integration logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: host-integration-logs
           path: engine-rust/target/debug
@@ -86,7 +86,7 @@ jobs:
           ls -la engine-rust/ffi/target/*/release || true
       - name: Upload XCFramework artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: xcframework
           path: build/xcframework
