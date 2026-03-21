@@ -122,6 +122,38 @@ jobs:
         echo "Running CodeQL trace-command for JS build"
         "$CODEQL_BIN" database trace-command --index-traceless-dbs -O=javascript.trap.cache.dir=/home/runner/work/_temp/trapCaches/javascript -O=javascript.trap.cache.bound=1024 -O=javascript.trap.cache.write=true "$DB_DIR" -- bash -lc "$BUILD_CMD"
 
+    - name: Dump CodeQL trace artifacts and logs
+      if: contains(matrix.language, 'javascript')
+      run: |
+        set -e
+        echo "CODEQL PATH: $(which codeql 2>/dev/null || echo '/opt/hostedtoolcache/CodeQL')"
+        echo "Listing temp CodeQL DB dir contents: /home/runner/work/_temp/codeql_databases/javascript"
+        ls -la /home/runner/work/_temp/codeql_databases || true
+        if [ -d /home/runner/work/_temp/codeql_databases/javascript ]; then
+          echo "Contents of DB dir:"
+          ls -la /home/runner/work/_temp/codeql_databases/javascript || true
+          echo "Sizes:"
+          du -sh /home/runner/work/_temp/codeql_databases/javascript || true
+        else
+          echo "DB dir not present"
+        fi
+
+        echo "Listing trap cache dir: /home/runner/work/_temp/trapCaches/javascript"
+        ls -la /home/runner/work/_temp/trapCaches || true
+        if [ -d /home/runner/work/_temp/trapCaches/javascript ]; then
+          ls -la /home/runner/work/_temp/trapCaches/javascript || true
+          du -sh /home/runner/work/_temp/trapCaches/javascript || true
+        else
+          echo "Trap cache dir not present"
+        fi
+
+        echo "Show recent temp logs (if any) under /home/runner/work/_temp:"
+        find /home/runner/work/_temp -maxdepth 2 -type f -name "*.log" -print | xargs -r -n1 tail -n 200 || true
+        echo "-- repo root listing --"
+        ls -la "$GITHUB_WORKSPACE" || true
+        echo "-- head of repo-root package.json (if present) --"
+        if [ -f "$GITHUB_WORKSPACE/package.json" ]; then sed -n '1,200p' "$GITHUB_WORKSPACE/package.json" || true; else echo "no package.json at root"; fi
+
     - name: Build Rust FFI crate
       if: contains(matrix.language, 'cpp')
       run: |
