@@ -130,6 +130,35 @@ jobs:
         echo "Running CodeQL trace-command for JS build"
         "$CODEQL_BIN" database trace-command --index-traceless-dbs -O=javascript.trap.cache.dir=/home/runner/work/_temp/trapCaches/javascript -O=javascript.trap.cache.bound=1024 -O=javascript.trap.cache.write=true "$DB_DIR" -- bash -lc "$BUILD_CMD"
 
+    - name: Trace Swift build for CodeQL
+      if: contains(matrix.language, 'swift')
+      run: |
+        echo "Tracing Swift build under CodeQL to capture sources"
+        set -e
+        CODEQL_BIN=$(which codeql 2>/dev/null || echo "/Users/runner/hostedtoolcache/CodeQL/$(ls /Users/runner/hostedtoolcache/CodeQL | tail -n1)/arm64/codeql/codeql")
+        echo "Using CodeQL binary: $CODEQL_BIN"
+        DB_DIR=/Users/runner/work/_temp/codeql_databases/swift
+        mkdir -p "$DB_DIR"
+
+        # Prefer workspace Package.swift under ios-app/
+        if [ -f ./ios-app/Package.swift ]; then
+          BUILD_CMD="cd ios-app && swift build || true"
+        elif [ -f ./Package.swift ]; then
+          BUILD_CMD="swift build || true"
+        else
+          echo "No Package.swift found; attempting to run xcodebuild if workspace present"
+          if ls ios-app/*.xcodeproj >/dev/null 2>&1 || ls ios-app/*.xcworkspace >/dev/null 2>&1; then
+            echo "Found Xcode project/workspace under ios-app; attempting a best-effort xcodebuild"
+            BUILD_CMD="cd ios-app && xcodebuild -quiet -scheme Aegis clean build || true"
+          else
+            echo "No Swift manifest or Xcode project found; skipping Swift trace build"
+            exit 0
+          fi
+        fi
+
+        echo "Running CodeQL trace-command for Swift build"
+        "$CODEQL_BIN" database trace-command --index-traceless-dbs -O=swift.trap.cache.dir=/Users/runner/work/_temp/trapCaches/swift -O=swift.trap.cache.bound=1024 -O=swift.trap.cache.write=true "$DB_DIR" -- bash -lc "$BUILD_CMD"
+
     - name: Dump CodeQL trace artifacts and logs
       if: contains(matrix.language, 'javascript')
       run: |
