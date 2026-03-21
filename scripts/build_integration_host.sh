@@ -4,20 +4,28 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 # Build Rust ffi for host (linux x86_64 assumed)
 TARGET="x86_64-unknown-linux-gnu"
 cargo build --manifest-path "$ROOT_DIR/engine-rust/ffi/Cargo.toml" --release --target "$TARGET"
-LIB_DIR_TARGET="$ROOT_DIR/engine-rust/ffi/target/$TARGET/release"
-LIB_DIR_DEFAULT="$ROOT_DIR/engine-rust/ffi/target/release"
+LIB_DIRS=(
+  "$ROOT_DIR/engine-rust/ffi/target/$TARGET/release"
+  "$ROOT_DIR/engine-rust/ffi/target/release"
+  "$ROOT_DIR/engine-rust/target/$TARGET/release"
+  "$ROOT_DIR/engine-rust/target/release"
+)
 echo "Checking for built static libraries in:"
-echo " - $LIB_DIR_TARGET"
-echo " - $LIB_DIR_DEFAULT"
-ls -la "$LIB_DIR_TARGET" 2>/dev/null || true
-ls -la "$LIB_DIR_DEFAULT" 2>/dev/null || true
-# Find any produced static library (check both per-target and default release dirs)
-LIB_PATH="$(ls "$LIB_DIR_TARGET"/lib*.a 2>/dev/null || true)"
-if [[ -z "$LIB_PATH" ]]; then
-  LIB_PATH="$(ls "$LIB_DIR_DEFAULT"/lib*.a 2>/dev/null | head -n1 || true)"
-fi
+for d in "${LIB_DIRS[@]}"; do
+  echo " - $d"
+  ls -la "$d" 2>/dev/null || true
+done
+# Find any produced static library across possible release dirs
+LIB_PATH=""
+for d in "${LIB_DIRS[@]}"; do
+  candidate=$(ls "$d"/lib*.a 2>/dev/null | head -n1 || true)
+  if [[ -n "$candidate" ]]; then
+    LIB_PATH="$candidate"
+    break
+  fi
+done
 if [[ -z "$LIB_PATH" || ! -f "$LIB_PATH" ]]; then
-  echo "Rust static lib not found in either $LIB_DIR_TARGET or $LIB_DIR_DEFAULT"
+  echo "Rust static lib not found in any of the expected release directories"
   exit 1
 fi
 echo "Using Rust static lib: $LIB_PATH"
