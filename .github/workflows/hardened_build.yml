@@ -75,7 +75,7 @@ jobs:
         run: |
           chmod +x scripts/build_release_xcframework.sh
           bash scripts/build_release_xcframework.sh
-      - name: Diagnostic: list built artifacts
+      - name: "Diagnostic: list built artifacts"
         if: always()
         run: |
           echo "Listing engine-rust/ffi/target for libffi artifacts"
