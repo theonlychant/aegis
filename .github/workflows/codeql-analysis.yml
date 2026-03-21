@@ -39,6 +39,44 @@ jobs:
         toolchain: stable
         override: true
 
+    - name: Set up Node and build JavaScript website (for JS matrix entries)
+      if: contains(matrix.language, 'javascript')
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Build JavaScript project for CodeQL
+      if: contains(matrix.language, 'javascript')
+      run: |
+        echo "Preparing JavaScript/TypeScript sources for CodeQL"
+        set -e
+        # prefer website/package.json if present
+        if [ -f ./website/package.json ]; then
+          cd website
+        elif [ -f ./package.json ]; then
+          cd .
+        else
+          echo "No package.json found for JavaScript project; skipping npm install/build"
+          exit 0
+        fi
+
+        echo "Node project dir: $(pwd)"
+        # Install dependencies (use ci if lockfile present)
+        if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+          npm ci --prefer-offline --no-audit --no-fund || npm install --no-audit --no-fund
+        else
+          npm install --no-audit --no-fund || true
+        fi
+
+        # If a build script exists, run it to produce distributable sources
+        if grep -q '"build"' package.json; then
+          npm run build || true
+        else
+          echo "No build script found; CodeQL will analyze source files directly."
+        fi
+        # return to repo root
+        cd $GITHUB_WORKSPACE
+
     - name: Build Rust FFI crate
       if: contains(matrix.language, 'cpp')
       run: |
