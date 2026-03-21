@@ -32,6 +32,24 @@ jobs:
       with:
         languages: ${{ matrix.language }}
 
+    - name: Build repository (best-effort for C/C++)
+      if: contains(matrix.language, 'cpp')
+      run: |
+        echo "Attempting best-effort C/C++ build for CodeQL"
+        set -e
+        if [ -f CMakeLists.txt ]; then
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake
+          cmake -S . -B build
+          cmake --build build -- -j$(nproc)
+        elif [ -f Makefile ]; then
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+          make -j$(nproc)
+        else
+          echo "No CMakeLists.txt or Makefile found; skipping automatic build."
+        fi
+
     - name: Build
       run: |
         echo "Building repository for CodeQL analysis (best-effort)"
