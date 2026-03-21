@@ -107,9 +107,7 @@ License
 
 This repository contains multiple components. Choose a license suitable for your distribution; for Apple App Store distribution you must ensure third-party library licenses (e.g., Crypto++) are compatible with your chosen license.
 
-For the iOS app and client components we recommend an explicit license header and a LICENSE file at the repo root. (TBD — add your preferred license.)
-
-Screenshots
+For the iOS app and client components we recommend an explicit license header and a LICENSE file at the repo root. (TBD - add your preferred license.)
 -----------
 
 ![Home prototype](docs/assets/home-mockup.svg)
@@ -127,11 +125,7 @@ Updated local resources (actual files present)
 - **NIST SP 800-63-3 (Digital Identity)** - [docs/resources/nist-sp-800-63-3.pdf](docs/resources/nist-sp-800-63-3.pdf)
  - **Secure Coding / C/C++ (provided)** — [docs/resources/secure%20coding%20in%20c%20and%20c%2B%2B.pdf](docs/resources/secure%20coding%20in%20c%20and%20c%2B%2B.pdf)
  - **Cryptography in C and C++ (Welschenbach)** — [docs/resources/Welschenbach%20M.%20Cryptography%20in%20C%20and%20C%2B%2B%20%282ed.%2C%20Apress%2C%202005%29%28ISBN%201590595025%29%28O%29%28504s%29_CsCr_.pdf](docs/resources/Welschenbach%20M.%20Cryptography%20in%20C%20and%20C%2B%2B%20%282ed.%2C%20Apress%2C%202005%29%28ISBN%201590595025%29%28O%29%28504s%29_CsCr_.pdf)
-
-If you prefer, I can instead generate a separate `docs/reading-list.md` with these entries and short summaries. Replace any locally stored PDF with your own licensed copies as needed.
-
 Contact
 -------
-
-For collaboration, please open an issue or contact the maintainer at the GitHub repository: https://github.com/1proprogrammerchant/aegis
-
+email: sacehenry@gmail.com
+For collaboration, please open an issue or contact the me at the GitHub repository: https://github.com/1proprogrammerchant/aegis
