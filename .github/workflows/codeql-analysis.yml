@@ -12,7 +12,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runs-on }}
     permissions:
       actions: read
       contents: read
@@ -21,7 +21,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'cpp', 'javascript', 'python', 'swift' ]
+        include:
+          - language: cpp
+            runs-on: ubuntu-latest
+          - language: javascript
+            runs-on: ubuntu-latest
+          - language: python
+            runs-on: ubuntu-latest
+          - language: swift
+            runs-on: macos-latest
 
     steps:
     - name: Checkout repository
