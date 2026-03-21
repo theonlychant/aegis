@@ -95,7 +95,7 @@ Building for iOS
 Security & Privacy
 ------------------
 
-- Keep the FFI surface minimal and well-documented — each exported function must be audited and covered by tests.
+- Keep the FFI surface minimal and well-documented - each exported function must be audited and covered by tests.
 - Store keys in Keychain / Secure Enclave; never persist raw keys in plaintext on disk.
 - Sign and verify rule packs and updates; prefer authenticated updates.
 
