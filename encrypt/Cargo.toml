@@ -1,0 +1,15 @@
+[package]
+name = "encrypt"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "encrypt"
+path = "src/lib.rs"
+
+[dependencies]
+argon2 = "0.4"
+rand = "0.8"
+zeroize = "1.5"
+anyhow = "1.0"
+getrandom = "0.2"
