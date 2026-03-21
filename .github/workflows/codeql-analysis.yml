@@ -74,6 +74,16 @@ jobs:
         else
           echo "No build script found; CodeQL will analyze source files directly."
         fi
+        # Make package.json and common source dirs visible at repo root so CodeQL's autobuild can detect them
+        if [ -f package.json ]; then
+          echo "Copying JS project manifest and common source dirs to repo root for CodeQL"
+          cp -f package.json "$GITHUB_WORKSPACE/" || true
+          if [ -f package-lock.json ]; then cp -f package-lock.json "$GITHUB_WORKSPACE/" || true; fi
+          if [ -d src ]; then cp -a src "$GITHUB_WORKSPACE/" || true; fi
+          if [ -d public ]; then cp -a public "$GITHUB_WORKSPACE/" || true; fi
+          if [ -d dist ]; then cp -a dist "$GITHUB_WORKSPACE/" || true; fi
+        fi
+
         # return to repo root
         cd $GITHUB_WORKSPACE
 
