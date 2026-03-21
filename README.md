@@ -1,3 +1,5 @@
+# <img src="docs/assets/logo-social.png" alt="Aegis logo" width="220"/>
+
 # Aegis - The Mobile Privacy & Content Scanner
 
 ![Aegis hero](docs/assets/hero.svg)
