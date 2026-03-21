@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Project Aegis — Mobile privacy scanner</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;gap:12px;align-items:center">
+        <img src="assets/logo.svg" alt="Aegis" style="height:34px" />
+        <strong>Project Aegis</strong>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        &nbsp;·&nbsp;
+        <a href="features.html">Features</a>
+        &nbsp;·&nbsp;
+        <a href="how-it-works.html">How it works</a>
+        &nbsp;·&nbsp;
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-text">
+        <h1 class="reveal" data-delay="1">Hardened mobile scanner for user privacy</h1>
+        <p class="sub reveal" data-delay="2">Native Rust core, audited FFI bridge, packaged as XCFrameworks — designed for minimal attack surface.</p>
+        <div class="ctas">
+          <a class="btn primary" href="features.html">See Features</a>
+          <a class="btn" href="how-it-works.html">How it works</a>
+        </div>
+      </div>
+      <div class="hero-preview">
+        <div class="card reveal floaty" data-delay="3">
+          <img src="assets/home-mockup.svg" alt="App preview" style="width:100%;height:auto;display:block" />
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip">
+      <div class="card">
+        <h3 class="reveal" data-delay="1">Built for privacy</h3>
+        <p>All sensitive logic runs in a native engine compiled from Rust and packaged into platform-specific XCFrameworks. No raw data leaves the device by default.</p>
+        <ul>
+          <li>Argon2id key derivation</li>
+          <li>XChaCha20-Poly1305 for local blobs</li>
+          <li>Audit-friendly FFI boundary</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="preview">
+      <h2>Try the prototype</h2>
+      <div class="card">
+        <p>This site includes a small SwiftUI prototype and Figma starter assets in the repo. Use them to evaluate UX and integrate the XCFramework into an iOS app.</p>
+        <p><a href="/">Repository</a> contains `ios-app` and `engine-rust/ffi` skeletons.</p>
+      </div>
+    </section>
+
+    <section class="next-steps">
+      <h2>Next steps</h2>
+      <div class="card">
+        <ol>
+          <li>Validate XCFramework build on macOS CI</li>
+          <li>Integrate `encrypt` crate into runtime key provisioning</li>
+          <li>Iterate UX in Figma and SwiftUI prototype</li>
+        </ol>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Project Aegis — local prototype and design assets only. &nbsp;•&nbsp; <a href="privacy.html">Privacy</a>
+  </footer>
+
+  <script src="./scripts/site.js"></script>
+  <script src="./scripts/site.advanced.js" defer></script>
+</body>
+</html>

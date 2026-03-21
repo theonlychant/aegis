@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Features — Project Aegis</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;gap:12px;align-items:center">
+        <img src="assets/logo.svg" alt="Aegis" style="height:34px" />
+        <strong>Project Aegis</strong>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        &nbsp;·&nbsp;
+        <a href="features.html">Features</a>
+        &nbsp;·&nbsp;
+        <a href="how-it-works.html">How it works</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="reveal" data-delay="1">Features</h1>
+
+    <section class="card reveal" data-delay="2">
+      <h3>Hardened Native Scanner</h3>
+      <p>Rust-based engine exposes a small, well-documented FFI. Critical logic runs inside the native engine to reduce attack surface.</p>
+    </section>
+
+    <section class="card reveal" data-delay="3">
+      <h3>XCFramework Packaging</h3>
+      <p>Build scripts produce XCFrameworks for iOS targets; packaging includes diagnostics to handle hashed Cargo artifact names.</p>
+    </section>
+
+    <section class="card reveal" data-delay="4">
+      <h3>Secure Key Handling</h3>
+      <p>Argon2id key derivation provided by `encrypt` crate; zeroized key wrappers keep keys out of memory after use.</p>
+    </section>
+
+    <section class="card reveal" data-delay="5">
+      <h3>Design & Prototyping</h3>
+      <p>Figma starter package and SwiftUI prototype included. Use `design/figma-starter` for tokens and SVG components.</p>
+    </section>
+
+    <section class="card reveal" data-delay="6">
+      <h3>Toy Assets</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <img src="assets/card.svg" alt="card" style="width:140px;background:#fff;padding:8px;border-radius:8px"/>
+        <img src="assets/badge-high.svg" alt="high" style="width:80px;background:#fff;padding:8px;border-radius:8px"/>
+        <img src="assets/badge-medium.svg" alt="medium" style="width:80px;background:#fff;padding:8px;border-radius:8px"/>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Project Aegis — design & prototypes included.
+  </footer>
+
+<script src="./scripts/site.js"></script>
+<script src="./scripts/site.advanced.js" defer></script>
+
+</body>
+</html>
