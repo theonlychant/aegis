@@ -11,26 +11,66 @@ cargo build --manifest-path "$ROOT_DIR/engine-rust/ffi/Cargo.toml" --release --t
 # Build simulator
 cargo build --manifest-path "$ROOT_DIR/engine-rust/ffi/Cargo.toml" --release --target $IOS_SIM_TARGET
 
-# Paths to static libs (adjust crate artifact path if different)
-DEVICE_LIB="$ROOT_DIR/engine-rust/ffi/target/$IOS_DEVICE_TARGET/release/lib${CRATE_NAME}.a"
-SIM_LIB="$ROOT_DIR/engine-rust/ffi/target/$IOS_SIM_TARGET/release/lib${CRATE_NAME}.a"
+ # Candidate directories to search for produced .a artifacts
+CANDIDATE_DIRS=(
+  "$ROOT_DIR/engine-rust/ffi/target/$IOS_DEVICE_TARGET/release"
+  "$ROOT_DIR/engine-rust/ffi/target/$IOS_SIM_TARGET/release"
+  "$ROOT_DIR/engine-rust/ffi/target/release"
+  "$ROOT_DIR/engine-rust/target/$IOS_DEVICE_TARGET/release"
+  "$ROOT_DIR/engine-rust/target/$IOS_SIM_TARGET/release"
+  "$ROOT_DIR/engine-rust/target/release"
+)
 
-# Fallback: Cargo may emit into deps/ or name artifacts with hashes. Find matching .a if exact path missing.
-if [ ! -f "$DEVICE_LIB" ]; then
-  for f in "$ROOT_DIR/engine-rust/ffi/target/$IOS_DEVICE_TARGET/release"/lib${CRATE_NAME}-*.a "$ROOT_DIR/engine-rust/ffi/target/$IOS_DEVICE_TARGET/release"/*.a; do
+# Helper: find a library for a given triple (tries exact name then wildcard)
+find_lib_for_target() {
+  local triple_dir="$1"
+  local name="$2"
+  # Exact path first
+  if [ -f "$triple_dir/lib${name}.a" ]; then
+    echo "$triple_dir/lib${name}.a"
+    return 0
+  fi
+  # Wildcard matches (libname-*.a) then any .a
+  shopt -s nullglob 2>/dev/null || true
+  for f in "$triple_dir/lib${name}-"*.a "$triple_dir"/*.a; do
     if [ -f "$f" ]; then
-      DEVICE_LIB="$f"
-      break
+      echo "$f"
+      return 0
     fi
   done
+  return 1
+}
+
+# Search for device and simulator libs across candidate dirs
+DEVICE_LIB=""
+SIM_LIB=""
+for d in "${CANDIDATE_DIRS[@]}"; do
+  # check device dir candidate
+  if [ -z "$DEVICE_LIB" ]; then
+    DEVICE_LIB_CANDIDATE=$(find_lib_for_target "$d" "$CRATE_NAME" 2>/dev/null || true)
+    if [ -n "$DEVICE_LIB_CANDIDATE" ]; then
+      DEVICE_LIB="$DEVICE_LIB_CANDIDATE"
+    fi
+  fi
+  # check simulator dir candidate
+  if [ -z "$SIM_LIB" ]; then
+    SIM_LIB_CANDIDATE=$(find_lib_for_target "$d" "$CRATE_NAME" 2>/dev/null || true)
+    if [ -n "$SIM_LIB_CANDIDATE" ]; then
+      SIM_LIB="$SIM_LIB_CANDIDATE"
+    fi
+  fi
+done
+
+echo "Resolved device lib: ${DEVICE_LIB:-<not found>}"
+echo "Resolved simulator lib: ${SIM_LIB:-<not found>}"
+
+if [ ! -f "$DEVICE_LIB" ]; then
+  echo "error: the path does not point to a valid library: $DEVICE_LIB"
+  exit 70
 fi
 if [ ! -f "$SIM_LIB" ]; then
-  for f in "$ROOT_DIR/engine-rust/ffi/target/$IOS_SIM_TARGET/release"/lib${CRATE_NAME}-*.a "$ROOT_DIR/engine-rust/ffi/target/$IOS_SIM_TARGET/release"/*.a; do
-    if [ -f "$f" ]; then
-      SIM_LIB="$f"
-      break
-    fi
-  done
+  echo "error: the path does not point to a valid library: $SIM_LIB"
+  exit 71
 fi
 INCLUDE_DIR="$ROOT_DIR/engine-c/include"
 OUT_DIR="$ROOT_DIR/build/xcframework"
