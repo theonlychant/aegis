@@ -175,9 +175,6 @@ jobs:
         echo "Non-C/C++ language matrix entry; no generic build provided."
         # Customize build commands per-language as needed
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
-
     - name: Debug JS sources for CodeQL
       if: contains(matrix.language, 'javascript')
       run: |
@@ -198,3 +195,6 @@ jobs:
           sed -n '1,40p' "$f" || true
           i=$((i+1))
         done
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v4
