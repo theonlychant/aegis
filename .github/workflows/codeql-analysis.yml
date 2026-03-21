@@ -44,10 +44,26 @@ jobs:
       run: |
         echo "Building Rust FFI (engine-rust/ffi) for CodeQL"
         set -e
+        # Detect manifest path (repo may have the engine-rust directory at repo root or under an `aegis/` subdir)
+        if [ -f "./aegis/engine-rust/ffi/Cargo.toml" ]; then
+          MANIFEST_PATH="aegis/engine-rust/ffi/Cargo.toml"
+          TARGET_DIR="aegis/engine-rust/target"
+        elif [ -f "./engine-rust/ffi/Cargo.toml" ]; then
+          MANIFEST_PATH="engine-rust/ffi/Cargo.toml"
+          TARGET_DIR="engine-rust/target"
+        else
+          echo "Warning: Cargo manifest not found at ./aegis/engine-rust/ffi/Cargo.toml or ./engine-rust/ffi/Cargo.toml"
+          exit 0
+        fi
+
+        # Resolve absolute paths to avoid $GITHUB_WORKSPACE duplication (runner sets workspace to /home/runner/work/<repo>/<repo>)
+        MANIFEST_ABS=$(realpath "$MANIFEST_PATH" 2>/dev/null || printf "%s/%s" "$PWD" "$MANIFEST_PATH")
+        TARGET_DIR_ABS=$(realpath "$TARGET_DIR" 2>/dev/null || printf "%s/%s" "$PWD" "$TARGET_DIR")
+
         # Place cargo outputs under a predictable target dir so CMake can find the static lib
-        export CARGO_TARGET_DIR="$GITHUB_WORKSPACE/aegis/engine-rust/target"
-        cargo build --manifest-path "$GITHUB_WORKSPACE/aegis/engine-rust/ffi/Cargo.toml" || cargo build --manifest-path "$GITHUB_WORKSPACE/aegis/engine-rust/ffi/Cargo.toml"
-        RUST_LIB="$GITHUB_WORKSPACE/aegis/engine-rust/target/debug/libffi.a"
+        export CARGO_TARGET_DIR="$TARGET_DIR_ABS"
+        cargo build --manifest-path "$MANIFEST_ABS" || cargo build --manifest-path "$MANIFEST_ABS"
+        RUST_LIB="$TARGET_DIR_ABS/debug/libffi.a"
         if [ -f "$RUST_LIB" ]; then
           echo "Produced Rust staticlib: $RUST_LIB"
           echo "RUST_FFI_LIB=$RUST_LIB" >> $GITHUB_ENV
