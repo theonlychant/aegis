@@ -1,4 +1,4 @@
-# Aegis — Mobile Privacy & Content Scanner
+# Aegis - The Mobile Privacy & Content Scanner
 
 ![Aegis hero](docs/assets/hero.svg)
 
@@ -121,12 +121,15 @@ Resources / Reading List
 The repository includes a set of local reference PDFs useful for security, cryptography, and mobile platform guidance. Downloaded copies are available in `docs/resources/` for offline reading.
 
 Updated local resources (actual files present)
-- **Apple Platform Security (local copy)** — [docs/resources/apple-platform-security-guide.pdf](docs/resources/apple-platform-security-guide.pdf)
-- **Argon2 specification** — [docs/resources/argon2-specs.pdf](docs/resources/argon2-specs.pdf)
-- **NIST SP 800-38D (GCM)** — [docs/resources/nist-sp-800-38d.pdf](docs/resources/nist-sp-800-38d.pdf)
-- **NIST SP 800-63-3 (Digital Identity)** — [docs/resources/nist-sp-800-63-3.pdf](docs/resources/nist-sp-800-63-3.pdf)
-- **Secure Coding / C/C++ (provided)** — [docs/resources/secure coding in c and c++.pdf](docs/resources/secure coding in c and c++.pdf)
-- **Cryptography in C and C++ (Welschenbach)** — [docs/resources/Welschenbach M. Cryptography in C and C++ (2ed., Apress, 2005)(ISBN 1590595025)(O)(504s)_CsCr_.pdf](docs/resources/Welschenbach M. Cryptography in C and C++ (2ed., Apress, 2005)(ISBN 1590595025)(O)(504s)_CsCr_.pdf)
+- **Apple Platform Security (local copy)** - [docs/resources/apple-platform-security-guide.pdf](docs/resources/apple-platform-security-guide.pdf)
+- **Argon2 specification** - [docs/resources/argon2-specs.pdf](docs/resources/argon2-specs.pdf)
+- **NIST SP 800-38D (GCM)** - [docs/resources/nist-sp-800-38d.pdf](docs/resources/nist-sp-800-38d.pdf)
+- **NIST SP 800-63-3 (Digital Identity)** - [docs/resources/nist-sp-800-63-3.pdf](docs/resources/nist-sp-800-63-3.pdf)
+- **Secure Coding / C/C++ (provided)** - [docs/resources/secure coding in c and c++.pdf](docs/resources/secure coding in c and c++.pdf)
+- **Cryptography in C and C++ (Welschenbach)** - [docs/resources/Welschenbach M. Cryptography in C and C++ (2ed., Apress, 2005)(ISBN 1590595025)(O)(504s)_CsCr_.pdf](docs/resources/Welschenbach M. Cryptography in C and C++ (2ed., Apress, 2005)(ISBN 1590595025)(O)(504s)_CsCr_.pdf)
+
+ - **Secure Coding / C/C++ (provided)** — [docs/resources/secure%20coding%20in%20c%20and%20c%2B%2B.pdf](docs/resources/secure%20coding%20in%20c%20and%20c%2B%2B.pdf)
+ - **Cryptography in C and C++ (Welschenbach)** — [docs/resources/Welschenbach%20M.%20Cryptography%20in%20C%20and%20C%2B%2B%20%282ed.%2C%20Apress%2C%202005%29%28ISBN%201590595025%29%28O%29%28504s%29_CsCr_.pdf](docs/resources/Welschenbach%20M.%20Cryptography%20in%20C%20and%20C%2B%2B%20%282ed.%2C%20Apress%2C%202005%29%28ISBN%201590595025%29%28O%29%28504s%29_CsCr_.pdf)
 
 If you prefer, I can instead generate a separate `docs/reading-list.md` with these entries and short summaries. Replace any locally stored PDF with your own licensed copies as needed.
 
