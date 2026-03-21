@@ -177,3 +177,24 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
+
+    - name: Debug JS sources for CodeQL
+      if: contains(matrix.language, 'javascript')
+      run: |
+        echo "Repository root listing (top-level):"
+        ls -la "$GITHUB_WORKSPACE" || true
+        echo "--- package.json at repo root: ---"
+        if [ -f "$GITHUB_WORKSPACE/package.json" ]; then
+          sed -n '1,120p' "$GITHUB_WORKSPACE/package.json" || true
+        else
+          echo "No package.json at repo root"
+        fi
+        echo "--- Finding JS/TS files (max 50) ---"
+        find "$GITHUB_WORKSPACE" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.tsx" \) -print | head -n 50 || true
+        echo "--- Showing heads of first 10 JS/TS files ---"
+        i=0
+        for f in $(find "$GITHUB_WORKSPACE" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.tsx" \) | head -n 10); do
+          echo "---- $f ----"
+          sed -n '1,40p' "$f" || true
+          i=$((i+1))
+        done
