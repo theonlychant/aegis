@@ -11,7 +11,7 @@ jobs:
     name: Host integration (Linux)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Cache Rust/Cargo
         uses: actions/cache@v4
         with:
@@ -51,7 +51,7 @@ jobs:
     name: Build XCFramework (macOS)
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
