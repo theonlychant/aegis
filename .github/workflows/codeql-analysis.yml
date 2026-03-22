@@ -26,8 +26,6 @@ jobs:
             runs-on: ubuntu-latest
           - language: javascript
             runs-on: ubuntu-latest
-          - language: python
-            runs-on: ubuntu-latest
           - language: swift
             runs-on: macos-latest
 
