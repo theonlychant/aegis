@@ -1,0 +1,93 @@
+name: Hardened Build and Integration
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  host-integration:
+    name: Host integration (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache Rust/Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            engine-rust/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake clang
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Add iOS Rust targets
+        run: |
+          rustup target add aarch64-apple-ios x86_64-apple-ios || true
+      - name: Run Rust unit and integration tests
+        working-directory: engine-rust
+        run: |
+          cargo test --workspace --tests --verbose
+      - name: Build and run host integration
+        run: |
+          bash scripts/build_integration_host.sh
+      - name: Upload integration logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: host-integration-logs
+          path: engine-rust/target/debug
+
+  macos-xcframework:
+    name: Build XCFramework (macOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Add iOS Rust targets
+        run: |
+          rustup target add aarch64-apple-ios x86_64-apple-ios || true
+      - name: Cache Rust/Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            engine-rust/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Run Rust tests (macOS)
+        working-directory: engine-rust
+        run: |
+          cargo test -p ffi --verbose || true
+      - name: Build XCFramework
+        run: |
+          chmod +x scripts/build_release_xcframework.sh
+          bash scripts/build_release_xcframework.sh
+      - name: "Diagnostic: list built artifacts"
+        if: always()
+        run: |
+          echo "Listing engine-rust/ffi/target for libffi artifacts"
+          find engine-rust/ffi/target -maxdepth 4 -type f -name "libffi*" -print || true
+          echo "Listing staged release artifacts"
+          ls -la target_ios/release || true
+          echo "Listing engine-rust/ffi/target/*/release"
+          ls -la engine-rust/ffi/target/*/release || true
+      - name: Upload XCFramework artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcframework
+          path: build/xcframework
+    

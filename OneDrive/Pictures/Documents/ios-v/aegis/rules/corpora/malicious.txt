@@ -1,0 +1,2 @@
+http://malicious.example/bad
+http://phish.example/login

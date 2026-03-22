@@ -1,0 +1,312 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ master ]
+  schedule:
+    - cron: '0 2 * * 1'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ${{ matrix.runs-on }}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: cpp
+            runs-on: ubuntu-latest
+          - language: javascript
+            runs-on: ubuntu-latest
+          - language: swift
+            runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v4
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Set up Rust toolchain (for C/C++ matrix entries)
+      if: contains(matrix.language, 'cpp')
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Set up Node and build JavaScript website (for JS matrix entries)
+      if: contains(matrix.language, 'javascript')
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Build JavaScript project for CodeQL
+      if: contains(matrix.language, 'javascript')
+      run: |
+        echo "Preparing JavaScript/TypeScript sources for CodeQL"
+        set -e
+        # prefer website/package.json if present
+        if [ -f ./website/package.json ]; then
+          cd website
+        elif [ -f ./package.json ]; then
+          cd .
+        else
+          echo "No package.json found for JavaScript project; skipping npm install/build"
+          exit 0
+        fi
+
+        echo "Node project dir: $(pwd)"
+        # Install dependencies (use ci if lockfile present)
+        if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+          npm ci --prefer-offline --no-audit --no-fund || npm install --no-audit --no-fund
+        else
+          npm install --no-audit --no-fund || true
+        fi
+
+        # If a build script exists, run it to produce distributable sources
+        if grep -q '"build"' package.json; then
+          npm run build || true
+        else
+          echo "No build script found; CodeQL will analyze source files directly."
+        fi
+        # Make package.json and common source dirs visible at repo root so CodeQL's autobuild can detect them
+        if [ -f package.json ]; then
+          echo "Copying JS project manifest and common source dirs to repo root for CodeQL"
+          cp -f package.json "$GITHUB_WORKSPACE/" || true
+          if [ -f package-lock.json ]; then cp -f package-lock.json "$GITHUB_WORKSPACE/" || true; fi
+          if [ -d src ]; then cp -a src "$GITHUB_WORKSPACE/" || true; fi
+          if [ -d public ]; then cp -a public "$GITHUB_WORKSPACE/" || true; fi
+          if [ -d dist ]; then cp -a dist "$GITHUB_WORKSPACE/" || true; fi
+        fi
+
+        # return to repo root
+        cd $GITHUB_WORKSPACE
+
+    - name: Expose website sources at repo root for CodeQL
+      if: contains(matrix.language, 'javascript')
+      run: |
+        echo "Copying website/ contents to repo root to ensure CodeQL sees JS/TS sources"
+        set -e
+        if [ -d ./website ]; then
+          cp -a website/. "$GITHUB_WORKSPACE/" || true
+          echo "Copied website/ to repo root"
+        else
+          echo "No website/ directory present; skipping"
+        fi
+
+    - name: Trace JavaScript build for CodeQL
+      if: contains(matrix.language, 'javascript')
+      run: |
+        echo "Tracing JavaScript build under CodeQL to capture sources"
+        set -e
+        CODEQL_BIN=$(which codeql 2>/dev/null || echo "/opt/hostedtoolcache/CodeQL/$(ls /opt/hostedtoolcache/CodeQL | tail -n1)/x64/codeql/codeql")
+        echo "Using CodeQL binary: $CODEQL_BIN"
+        DB_DIR=/home/runner/work/_temp/codeql_databases/javascript
+        mkdir -p "$DB_DIR"
+
+        # Prepare build command depending on where package.json is
+        if [ -f ./website/package.json ]; then
+          BUILD_CMD="cd website && if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then npm ci --prefer-offline --no-audit --no-fund; else npm install --no-audit --no-fund || true; fi; if grep -q '\"build\"' package.json; then npm run build || true; fi"
+        elif [ -f ./package.json ]; then
+          BUILD_CMD="if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then npm ci --prefer-offline --no-audit --no-fund; else npm install --no-audit --no-fund || true; fi; if grep -q '\"build\"' package.json; then npm run build || true; fi"
+        else
+          echo "No package.json found; skipping trace build"
+          exit 0
+        fi
+
+        echo "Running CodeQL trace-command for JS build"
+        "$CODEQL_BIN" database trace-command --index-traceless-dbs -O=javascript.trap.cache.dir=/home/runner/work/_temp/trapCaches/javascript -O=javascript.trap.cache.bound=1024 -O=javascript.trap.cache.write=true "$DB_DIR" -- bash -lc "$BUILD_CMD"
+
+    - name: Trace Swift build for CodeQL
+      if: contains(matrix.language, 'swift')
+      run: |
+        echo "Tracing Swift build under CodeQL to capture sources"
+        set -e
+        CODEQL_BIN=$(which codeql 2>/dev/null || echo "/Users/runner/hostedtoolcache/CodeQL/$(ls /Users/runner/hostedtoolcache/CodeQL | tail -n1)/arm64/codeql/codeql")
+        echo "Using CodeQL binary: $CODEQL_BIN"
+        DB_DIR=/Users/runner/work/_temp/codeql_databases/swift
+        mkdir -p "$DB_DIR"
+
+        # Prefer workspace Package.swift under ios-app/
+        if [ -f ./ios-app/Package.swift ]; then
+          BUILD_CMD="cd ios-app && swift build || true"
+        elif [ -f ./Package.swift ]; then
+          BUILD_CMD="swift build || true"
+        else
+          echo "No Package.swift found; attempting to run xcodebuild if workspace present"
+          if ls ios-app/*.xcodeproj >/dev/null 2>&1 || ls ios-app/*.xcworkspace >/dev/null 2>&1; then
+            echo "Found Xcode project/workspace under ios-app; attempting a best-effort xcodebuild"
+            BUILD_CMD="cd ios-app && xcodebuild -quiet -scheme Aegis clean build || true"
+          else
+            echo "No Swift manifest or Xcode project found; skipping Swift trace build"
+            exit 0
+          fi
+        fi
+
+        echo "Running CodeQL trace-command for Swift build"
+        "$CODEQL_BIN" database trace-command --index-traceless-dbs -O=swift.trap.cache.dir=/Users/runner/work/_temp/trapCaches/swift -O=swift.trap.cache.bound=1024 -O=swift.trap.cache.write=true "$DB_DIR" -- bash -lc "$BUILD_CMD"
+
+    - name: Dump CodeQL trace artifacts and logs
+      if: contains(matrix.language, 'javascript')
+      run: |
+        set -e
+        echo "CODEQL PATH: $(which codeql 2>/dev/null || echo '/opt/hostedtoolcache/CodeQL')"
+        echo "Listing temp CodeQL DB dir contents: /home/runner/work/_temp/codeql_databases/javascript"
+        ls -la /home/runner/work/_temp/codeql_databases || true
+        if [ -d /home/runner/work/_temp/codeql_databases/javascript ]; then
+          echo "Contents of DB dir:"
+          ls -la /home/runner/work/_temp/codeql_databases/javascript || true
+          echo "Sizes:"
+          du -sh /home/runner/work/_temp/codeql_databases/javascript || true
+        else
+          echo "DB dir not present"
+        fi
+
+        echo "Listing trap cache dir: /home/runner/work/_temp/trapCaches/javascript"
+        ls -la /home/runner/work/_temp/trapCaches || true
+        if [ -d /home/runner/work/_temp/trapCaches/javascript ]; then
+          ls -la /home/runner/work/_temp/trapCaches/javascript || true
+          du -sh /home/runner/work/_temp/trapCaches/javascript || true
+        else
+          echo "Trap cache dir not present"
+        fi
+
+        echo "Show recent temp logs (if any) under /home/runner/work/_temp:"
+        find /home/runner/work/_temp -maxdepth 2 -type f -name "*.log" -print | xargs -r -n1 tail -n 200 || true
+        echo "-- repo root listing --"
+        ls -la "$GITHUB_WORKSPACE" || true
+        echo "-- head of repo-root package.json (if present) --"
+        if [ -f "$GITHUB_WORKSPACE/package.json" ]; then sed -n '1,200p' "$GITHUB_WORKSPACE/package.json" || true; else echo "no package.json at root"; fi
+
+    - name: Upload CodeQL trace artifacts
+      if: contains(matrix.language, 'javascript')
+      uses: actions/upload-artifact@v4
+      with:
+        name: codeql-javascript-trace-${{ github.run_id }}
+        path: |
+          /home/runner/work/_temp/codeql_databases/javascript
+          /home/runner/work/_temp/trapCaches/javascript
+          ${{ github.workspace }}/package.json
+
+    - name: Build Rust FFI crate
+      if: contains(matrix.language, 'cpp')
+      run: |
+        echo "Building Rust FFI (engine-rust/ffi) for CodeQL"
+        set -e
+        # Detect manifest path (repo may have the engine-rust directory at repo root or under an `aegis/` subdir)
+        if [ -f "./aegis/engine-rust/ffi/Cargo.toml" ]; then
+          MANIFEST_PATH="aegis/engine-rust/ffi/Cargo.toml"
+          TARGET_DIR="aegis/engine-rust/target"
+        elif [ -f "./engine-rust/ffi/Cargo.toml" ]; then
+          MANIFEST_PATH="engine-rust/ffi/Cargo.toml"
+          TARGET_DIR="engine-rust/target"
+        else
+          echo "Warning: Cargo manifest not found at ./aegis/engine-rust/ffi/Cargo.toml or ./engine-rust/ffi/Cargo.toml"
+          exit 0
+        fi
+
+        # Resolve absolute paths to avoid $GITHUB_WORKSPACE duplication (runner sets workspace to /home/runner/work/<repo>/<repo>)
+        MANIFEST_ABS=$(realpath "$MANIFEST_PATH" 2>/dev/null || printf "%s/%s" "$PWD" "$MANIFEST_PATH")
+        TARGET_DIR_ABS=$(realpath "$TARGET_DIR" 2>/dev/null || printf "%s/%s" "$PWD" "$TARGET_DIR")
+
+        # Place cargo outputs under a predictable target dir so CMake can find the static lib
+        export CARGO_TARGET_DIR="$TARGET_DIR_ABS"
+        cargo build --manifest-path "$MANIFEST_ABS" || cargo build --manifest-path "$MANIFEST_ABS"
+        RUST_LIB="$TARGET_DIR_ABS/debug/libffi.a"
+        if [ -f "$RUST_LIB" ]; then
+          echo "Produced Rust staticlib: $RUST_LIB"
+          echo "RUST_FFI_LIB=$RUST_LIB" >> $GITHUB_ENV
+        else
+          echo "Warning: Rust FFI staticlib not found at $RUST_LIB"
+        fi
+
+    - name: Build repository (best-effort for C/C++)
+      if: contains(matrix.language, 'cpp')
+      run: |
+        echo "Attempting best-effort C/C++ build for CodeQL (searching subdirs)"
+        set -e
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake || true
+
+        # If a top-level CMakeLists exists, configure and build it first
+        if [ -f CMakeLists.txt ]; then
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DRUST_FFI_LIB=${RUST_FFI_LIB:-}
+          cmake --build build -- -j$(nproc) || true
+          if [ -f build/compile_commands.json ]; then
+            cp build/compile_commands.json ./compile_commands.json
+            echo "Copied build/compile_commands.json to repo root."
+          fi
+        fi
+
+        # Search for CMakeLists.txt in subdirectories (excluding build dirs) and attempt to build them
+        found_compdb=0
+        while IFS= read -r dir; do
+          echo "Found CMakeLists in: $dir"
+          builddir="$dir/build_codeql"
+          cmake -S "$dir" -B "$builddir" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DRUST_FFI_LIB=${RUST_FFI_LIB:-} || true
+          cmake --build "$builddir" -- -j$(nproc) || true
+          if [ -f "$builddir/compile_commands.json" ] && [ $found_compdb -eq 0 ]; then
+            cp "$builddir/compile_commands.json" ./compile_commands.json
+            echo "Copied $builddir/compile_commands.json to repo root."
+            found_compdb=1
+          fi
+        done < <(find . -name CMakeLists.txt -not -path "*/build/*" -not -path "*/.git/*" -exec dirname {} \; | sort -u)
+
+        # If a Makefile is present at repo root, try building with make
+        if [ -f Makefile ]; then
+          sudo apt-get install -y build-essential || true
+          if command -v bear >/dev/null 2>&1; then
+            bear -- make -j$(nproc) || true
+            if [ -f compile_commands.json ] && [ $found_compdb -eq 0 ]; then
+              echo "compile_commands.json generated by bear at repo root"
+              found_compdb=1
+            fi
+          else
+            make -j$(nproc) || true
+          fi
+        fi
+
+        if [ $found_compdb -eq 0 ] && [ ! -f compile_commands.json ]; then
+          echo "No compile_commands.json generated by automatic builds."
+        fi
+
+    - name: Build (non-cpp placeholder)
+      if: "!contains(matrix.language, 'cpp')"
+      run: |
+        echo "Non-C/C++ language matrix entry; no generic build provided."
+        # Customize build commands per-language as needed
+
+    - name: Debug JS sources for CodeQL
+      if: contains(matrix.language, 'javascript')
+      run: |
+        echo "Repository root listing (top-level):"
+        ls -la "$GITHUB_WORKSPACE" || true
+        echo "--- package.json at repo root: ---"
+        if [ -f "$GITHUB_WORKSPACE/package.json" ]; then
+          sed -n '1,120p' "$GITHUB_WORKSPACE/package.json" || true
+        else
+          echo "No package.json at repo root"
+        fi
+        echo "--- Finding JS/TS files (max 50) ---"
+        find "$GITHUB_WORKSPACE" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.tsx" \) -print | head -n 50 || true
+        echo "--- Showing heads of first 10 JS/TS files ---"
+        i=0
+        for f in $(find "$GITHUB_WORKSPACE" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.tsx" \) | head -n 10); do
+          echo "---- $f ----"
+          sed -n '1,40p' "$f" || true
+          i=$((i+1))
+        done
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v4

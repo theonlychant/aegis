@@ -1,0 +1,52 @@
+name: Aegis
+options:
+  bundleIdPrefix: com.example
+
+configs:
+  Debug: debug
+  Release: release
+
+settings:
+  PRODUCT_BUNDLE_IDENTIFIER: com.example.aegis
+
+targets:
+  AegisApp:
+    type: application
+    platform: iOS
+    deploymentTarget: '15.0'
+    sources:
+      - path: Sources/AegisApp
+    settings:
+      INFO_PLIST_FILE: Info.plist
+    entitlements: Entitlements/Aegis.entitlements
+    dependencies:
+      - target: ContentFilterExtension
+      - target: URLFilterExtension
+
+  ContentFilterExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: '15.0'
+    sources:
+      - path: ../ios-extensions/content-filter
+    entitlements: ../ios-extensions/content-filter/Entitlements/ContentFilter.entitlements
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.example.aegis.contentfilter
+
+  URLFilterExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: '26.0'
+    sources:
+      - path: ../ios-extensions/url-filter
+    entitlements: ../ios-extensions/url-filter/Entitlements/URLFilter.entitlements
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.example.aegis.urlfilter
+
+schemes:
+  Aegis:
+    build:
+      targets:
+        AegisApp: {}
+        ContentFilterExtension: {}
+        URLFilterExtension: {}
