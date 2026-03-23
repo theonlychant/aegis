@@ -132,3 +132,7 @@ Contact
 -------
 email: sacehenry@gmail.com
 For collaboration, please open an issue or contact the me at the GitHub repository: https://github.com/1proprogrammerchant/aegis
+
+
+# Website
+I had to use a third party app to get this domain I will use something else soon https://code-reader-website--sacehenry.replit.app
