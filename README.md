@@ -121,7 +121,7 @@ Resources / Reading List
 The repository includes a set of local reference PDFs useful for security, cryptography, and mobile platform guidance. Downloaded copies are available in `docs/resources/` for offline reading.
 
 Updated local resources (actual files present)
-- **Apple Platform Security (local copy)** - [docs/resources/apple-platform-security-guide.pdf](docs/resources/apple-platform-security-guide.pdf)
+- **Apple Platform Security** - [docs/resources/apple-platform-security-guide.pdf](docs/resources/apple-platform-security-guide.pdf)
 - **Argon2 specification** - [docs/resources/argon2-specs.pdf](docs/resources/argon2-specs.pdf)
 - **NIST SP 800-38D (GCM)** - [docs/resources/nist-sp-800-38d.pdf](docs/resources/nist-sp-800-38d.pdf)
 - **NIST SP 800-63-3 (Digital Identity)** - [docs/resources/nist-sp-800-63-3.pdf](docs/resources/nist-sp-800-63-3.pdf)
