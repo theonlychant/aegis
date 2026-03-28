@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
   <rect width="800" height="600" fill="#FFFFFF" />
   <text x="40" y="56" font-family="Helvetica, Arial, sans-serif" font-size="32" fill="#1C1C1E">Aegis</text>
-  <text x="40" y="96" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#6B7280">Protection: Ready • Last scan: — • Detected: 0</text>
+  <text x="40" y="96" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#6B7280">Protection: Ready • Last scan: - • Detected: 0</text>
   
   <!-- Quick Scan button -->
   <rect x="40" y="120" rx="10" width="140" height="44" fill="#0A84FF" />
