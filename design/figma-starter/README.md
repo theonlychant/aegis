@@ -3,8 +3,8 @@ Figma starter package
 What this package contains:
 
 - `tokens.json` (refer to the top-level design tokens) — colors, typography, spacing
-- `components/` — SVG components you can paste or import into Figma: `button.svg`, `card.svg`, `badge-high.svg`, `badge-medium.svg`, `badge-low.svg`
-- `mockups/` — `home-mockup.svg`, a simple Home screen mockup you can open or import into Figma
+- `components/` - SVG components you can paste or import into Figma: `button.svg`, `card.svg`, `badge-high.svg`, `badge-medium.svg`, `badge-low.svg`
+- `mockups/` - `home-mockup.svg`, a simple Home screen mockup you can open or import into Figma
 
 How to use in Figma:
 
