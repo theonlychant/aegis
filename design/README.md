@@ -8,8 +8,8 @@ This folder contains a short design brief, token file, and a minimal SwiftUI pro
 
 Deliverables in this commit
 
-- `tokens.json` — minimal design tokens (colors, typography, spacing)
-- `prototypes/` — SwiftUI prototype files (HomeView) under the ios-app sources
+- `tokens.json` - minimal design tokens (colors, typography, spacing)
+- `prototypes/` - SwiftUI prototype files (HomeView) under the ios-app sources
 - This README includes helpful resources and next steps.
 
 Resources
