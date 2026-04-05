@@ -1,4 +1,4 @@
-engine-cpp — High-performance heuristics (C++)
+engine-cpp - High-performance heuristics (C++)
 
 This folder now builds together with `engine-c` so the C bridge is available to C++ code.
 
