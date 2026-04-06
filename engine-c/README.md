@@ -1,4 +1,4 @@
-engine-c — C ABI bridge and helpers
+engine-c - C ABI bridge and helpers
 
 Purpose
 
