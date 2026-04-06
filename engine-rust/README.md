@@ -1,4 +1,4 @@
-engine-rust — Memory-safe scanner core (Rust)
+engine-rust - Memory-safe scanner core (Rust)
 
 Purpose
 
