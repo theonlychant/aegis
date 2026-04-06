@@ -1,4 +1,4 @@
-fuzz — Fuzzing harnesses
+fuzz - Fuzzing harnesses
 
 Purpose
 
