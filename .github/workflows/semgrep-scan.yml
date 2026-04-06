@@ -43,9 +43,7 @@ jobs:
             echo "SARIF valid"
           else
             echo "SARIF missing required fields; replacing with minimal valid SARIF"
-            cat > results.sarif <<'SARIF'
-{ "version": "2.1.0", "runs": [] }
-SARIF
+            echo '{ "version": "2.1.0", "runs": [] }' > results.sarif
           fi
 
       - name: Upload SARIF
