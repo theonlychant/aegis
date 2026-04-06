@@ -1,4 +1,4 @@
-ios-app — Swift iOS application
+ios-app  Swift iOS application
 
 Purpose
 
