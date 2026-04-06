@@ -131,7 +131,7 @@ Updated local resources (actual files present)
 Contact
 -------
 email: sacehenry@gmail.com
-For collaboration, please open an issue or contact the me at the GitHub repository: https://github.com/1proprogrammerchant/aegis
+For collaboration, please open an issue or contact the me at the GitHub repository: [Repo](https://github.com/theonlychant/aegis)
 
 
 # Website
