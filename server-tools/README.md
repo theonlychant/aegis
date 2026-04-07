@@ -9,11 +9,11 @@ credentials.
 
 Files
 
-- `BackupManager.swift` — archives specified paths, encrypts the archive
+- `BackupManager.swift` - archives specified paths, encrypts the archive
   using GPG symmetric encryption (AES256), and can optionally upload the
   encrypted archive to a configured endpoint. Requires `gpg` and `tar`.
 
-- `ShutdownHelper.swift` — provides a small CLI to stop services via
+- `ShutdownHelper.swift` - provides a small CLI to stop services via
   `systemctl` (when available), signal processes by name, flush filesystem
   buffers, and send a simple admin notification to a webhook. Intended to
   perform graceful shutdown operations only.
