@@ -1,4 +1,4 @@
-rules — Detection rules and sample corpora
+rules - Detection rules and sample corpora
 
 Purpose
 
