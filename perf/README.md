@@ -1,4 +1,4 @@
-perf — Benchmarks and profiling
+perf - Benchmarks and profiling
 
 Purpose
 
