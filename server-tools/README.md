@@ -1,4 +1,4 @@
-Server Tools — Backup & Shutdown Helpers
+Server Tools - Backup & Shutdown Helpers
 
 Overview
 
