@@ -1,4 +1,4 @@
-docs = Design docs and compliance
+docs - Design docs and compliance
 
 Purpose
 
