@@ -1,4 +1,4 @@
-shared-schemas — JSON / Protobuf / OpenAPI schemas
+shared-schemas - JSON / Protobuf / OpenAPI schemas
 
 Purpose
 
