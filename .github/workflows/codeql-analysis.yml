@@ -47,7 +47,7 @@ jobs:
 
     - name: Set up Node and build JavaScript website (for JS matrix entries)
       if: contains(matrix.language, 'javascript')
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: '18'
 
