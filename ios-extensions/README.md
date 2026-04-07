@@ -1,4 +1,4 @@
-ios-extensions — Network Extension integrations
+ios-extensions - Network Extension integrations
 
 Contains Network Extension implementations and feature-specific folders.
 
