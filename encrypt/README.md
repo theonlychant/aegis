@@ -1,4 +1,4 @@
-encrypt — key derivation helper
+encrypt - key derivation helper
 
 This crate provides a small, focused helper to derive a 32-byte symmetric
 key from an operator-supplied passphrase using Argon2id. The crate returns a
