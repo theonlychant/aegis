@@ -1,4 +1,4 @@
-backend-go — Cloud services and reputation APIs
+backend-go - Cloud services and reputation APIs
 
 Purpose
 
