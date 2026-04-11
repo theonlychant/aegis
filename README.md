@@ -33,7 +33,7 @@ Getting started
 
 1. Clone the repository and inspect module READMEs for developer workflows.
 
-   git clone git@github.com:1proprogrammerchant/aegis.git
+   git clone git@github.com:theonlychant/aegis.git
 
 2. Web preview (local): open `website/` and run the static server (requires Python 3):
 
