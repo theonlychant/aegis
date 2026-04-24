@@ -135,4 +135,4 @@ For collaboration, please open an issue or contact the me at the GitHub reposito
 
 
 # Website
-I had to use a third party app to get this domain I will use something else soon https://code-reader-website--sacehenry.replit.app
+right now the website will be based on what is in the website directory [website](https://github.com/theonlychant/aegis/website)
