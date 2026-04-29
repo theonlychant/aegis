@@ -1,9 +1,9 @@
 module github.com/example/aegis-backend
 
-go 1.24
+go 1.24.0
 
 require (
-	github.com/golang-jwt/jwt/v5 v5.0.0
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/hashicorp/vault/api v1.6.0
 )
 
