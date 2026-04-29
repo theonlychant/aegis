@@ -32,24 +32,22 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            try {
-              const { data: pages } = await github.rest.repos.getPages({
+            const { data: pages } = await github.rest.repos.getPages({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            core.info(`Current cname: ${JSON.stringify(pages.cname)}`);
+            if (pages.cname) {
+              core.info(`Clearing custom domain: ${pages.cname}`);
+              await github.request('PATCH /repos/{owner}/{repo}/pages', {
                 owner: context.repo.owner,
-                repo: context.repo.repo
+                repo: context.repo.repo,
+                cname: null,
+                headers: { 'X-GitHub-Api-Version': '2022-11-28' }
               });
-              if (pages.cname) {
-                core.info(`Clearing custom domain: ${pages.cname}`);
-                await github.rest.repos.updateInformationAboutPagesSite({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  cname: ''
-                });
-                core.info('Custom domain cleared.');
-              } else {
-                core.info('No custom domain set, nothing to clear.');
-              }
-            } catch (error) {
-              core.warning(`Could not clear custom domain: ${error.message}`);
+              core.info('Custom domain cleared.');
+            } else {
+              core.info('No custom domain set.');
             }
 
       - name: Setup Pages
