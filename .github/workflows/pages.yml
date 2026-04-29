@@ -33,17 +33,23 @@ jobs:
         with:
           script: |
             try {
-              await github.request('DELETE /repos/{owner}/{repo}/pages/cname', {
+              const { data: pages } = await github.rest.repos.getPages({
                 owner: context.repo.owner,
                 repo: context.repo.repo
               });
-              core.info('Removed custom domain from GitHub Pages.');
-            } catch (error) {
-              if (error.status === 404) {
-                core.info('No custom domain set on GitHub Pages.');
+              if (pages.cname) {
+                core.info(`Clearing custom domain: ${pages.cname}`);
+                await github.rest.repos.updateInformationAboutPagesSite({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cname: ''
+                });
+                core.info('Custom domain cleared.');
               } else {
-                throw error;
+                core.info('No custom domain set, nothing to clear.');
               }
+            } catch (error) {
+              core.warning(`Could not clear custom domain: ${error.message}`);
             }
 
       - name: Setup Pages
